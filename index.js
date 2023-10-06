@@ -8,7 +8,7 @@ const hashesFile = 'processedHashes.txt';
 
 function generateRandomString() {
     const length = Math.floor(Math.random() * 20) + 1; // Zufällige Länge zwischen 1 und 20
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@.-';
     let result = '';
     for (let i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * characters.length));
@@ -36,7 +36,7 @@ async function fetchURL(url) {
                 fs.appendFileSync('foundURLs.txt', `${url}\n`);
                 console.log("Success")
             } else {
-                console.log("Failure")
+                // console.log("Failure")
             }
 
             res.resume();
@@ -58,12 +58,14 @@ async function bruteForceMD5() {
         }
     }
 
+    console.log(processedHashes.size)
+
     while (true) {
         const randomString = generateRandomString();
         const hash = md5(randomString);
 
         if (processedHashes.has(hash)) {
-            console.log("Jump")
+            // console.log("Jump")
             continue
         }
 
