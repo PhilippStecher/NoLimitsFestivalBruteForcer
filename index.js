@@ -62,7 +62,10 @@ async function bruteForceMD5() {
         const randomString = generateRandomString();
         const hash = md5(randomString);
 
-        if (processedHashes.has(hash)) continue;
+        if (processedHashes.has(hash)) {
+            console.log("Jump")
+            continue
+        }
 
         const fullUrl = baseUrl + hash + '/';
         
